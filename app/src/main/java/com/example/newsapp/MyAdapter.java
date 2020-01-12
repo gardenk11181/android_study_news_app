@@ -1,7 +1,10 @@
 package com.example.newsapp;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,15 +17,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView textView;
-        public MyViewHolder(TextView v) {
+        public TextView TextView_title;
+        public TextView TextView_content;
+        public ImageView ImageView_title;
+        public MyViewHolder(View v) {
             super(v);
-            textView = v;
+            TextView_title = v.findViewById(R.id.TextView_title); // 부모에서 id를 찾아야 하기에 .findViewById
+            TextView_content = v.findViewById(R.id.TextView_content);
+            ImageView_title = v.findViewById(R.id.ImageView_title);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(String[] myDataset) {
+    public MyAdapter(String[] myDataset) { //card로 보여줄 초기데이터셋
         mDataset = myDataset;
     }
 
@@ -31,8 +38,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
                                                      int viewType) {
         // create a new view
-        TextView v = (TextView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.my_text_view, parent, false);
+        LinearLayout v = (LinearLayout) LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.row_news, parent, false);
         MyViewHolder vh = new MyViewHolder(v);
         return vh;
     }
@@ -42,7 +49,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.textView.setText(mDataset[position]);
+        holder.TextView_title.setText(mDataset[position]);
 
     }
 
