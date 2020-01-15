@@ -17,9 +17,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
+        public ImageView ImageView_title;
         public TextView TextView_title;
         public TextView TextView_content;
-        public ImageView ImageView_title;
+
         public MyViewHolder(View v) {
             super(v);
             TextView_title = v.findViewById(R.id.TextView_title); // 부모에서 id를 찾아야 하기에 .findViewById
@@ -50,7 +51,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.TextView_title.setText(mDataset[position]);
-
+        holder.TextView_content.setText(mDataset[position]);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
