@@ -32,7 +32,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
             super(v);
             TextView_title = v.findViewById(R.id.TextView_title); // 부모에서 id를 찾아야 하기에 .findViewById
             TextView_content = v.findViewById(R.id.TextView_content);
-            ImageView_title = v.findViewById(R.id.ImageView_title);
             ImageView_title = (SimpleDraweeView) v.findViewById(R.id.ImageView_title);
         }
     }
@@ -63,7 +62,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
         NewsData news = mDataset.get(position);
 
         holder.TextView_title.setText(news.getTitle());
-        holder.TextView_content.setText(news.getContent());
+        String content = news.getContent();
+        if(content != "null" && content.length() > 0) {
+            holder.TextView_content.setText(content);
+        }
+        else {
+            holder.TextView_content.setText("-");
+        }
         Uri uri = Uri.parse(news.getUrlToImage());
         holder.ImageView_title.setImageURI(uri);
     }
@@ -71,6 +76,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset !=null? 0: mDataset.size();
+        return mDataset ==null? 0: mDataset.size();
     }
 }

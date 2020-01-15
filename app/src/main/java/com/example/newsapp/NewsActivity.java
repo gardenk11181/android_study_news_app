@@ -23,7 +23,7 @@ import java.util.List;
 
 public class NewsActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
+    private RecyclerView mrecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     RequestQueue queue;
@@ -32,15 +32,15 @@ public class NewsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
-        recyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
+        mrecyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        recyclerView.setHasFixedSize(true);
+        mrecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        mrecyclerView.setLayoutManager(layoutManager);
 
         // Instantiate the RequestQueue.
         queue = Volley.newRequestQueue(this);
@@ -52,7 +52,7 @@ public class NewsActivity extends AppCompatActivity {
     }
 
     public void getNews() {
-        String url ="https://newsapi.org/v2/top-headlines?country=kr&apiKey=be97132709164d4d9b0a6d8fd9ddb2c3";
+        String url ="https://newsapi.org/v2/top-headlines?country=us&apiKey=be97132709164d4d9b0a6d8fd9ddb2c3";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -60,16 +60,16 @@ public class NewsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
 
-                        // response -> NewsData Class 분류
-                        List<NewsData> news = new ArrayList<>();
-
                         try {
                             JSONObject jsonObj = new JSONObject(response);
                             JSONArray arrayArticles = jsonObj.getJSONArray("articles");
 
+                            // response -> NewsData Class 분류
+                            List<NewsData> news = new ArrayList<>();
+
                             for(int i=0;i<arrayArticles.length();i++) {
                                 JSONObject obj = arrayArticles.getJSONObject(i);
-                                Log.d("news",obj.toString());
+                                Log.d("news",obj.getString("content"));
                                 NewsData newsData = new NewsData();
                                 newsData.setTitle(obj.getString("title"));
                                 newsData.setUrlToImage(obj.getString("urlToImage"));
@@ -80,7 +80,7 @@ public class NewsActivity extends AppCompatActivity {
 
                             // specify an adapter (see also next example)
                             mAdapter = new MyAdapter(news,NewsActivity.this);
-                            recyclerView.setAdapter(mAdapter);
+                            mrecyclerView.setAdapter(mAdapter);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
