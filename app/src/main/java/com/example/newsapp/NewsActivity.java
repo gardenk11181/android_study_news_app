@@ -26,7 +26,6 @@ public class NewsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private String[] mDataset = {"1","2"};
     RequestQueue queue;
 
     @Override
@@ -60,7 +59,6 @@ public class NewsActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("news",response);
 
                         // response -> NewsData Class 분류
                         List<NewsData> news = new ArrayList<>();
@@ -81,7 +79,7 @@ public class NewsActivity extends AppCompatActivity {
                             }
 
                             // specify an adapter (see also next example)
-                            mAdapter = new MyAdapter(news);
+                            mAdapter = new MyAdapter(news,NewsActivity.this);
                             recyclerView.setAdapter(mAdapter);
 
                         } catch (JSONException e) {
