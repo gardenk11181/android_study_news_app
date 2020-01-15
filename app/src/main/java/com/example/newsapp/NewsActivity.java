@@ -1,7 +1,9 @@
 package com.example.newsapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -79,7 +81,18 @@ public class NewsActivity extends AppCompatActivity {
                             }
 
                             // specify an adapter (see also next example)
-                            mAdapter = new MyAdapter(news,NewsActivity.this);
+                            mAdapter = new MyAdapter(news, NewsActivity.this, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if(v.getTag()!=null) {
+                                        int position = (int)v.getTag(); // null check를 해야하는 이유
+                                        ((MyAdapter)mAdapter).getNews(position);
+                                        Intent intent = new Intent();
+                                        // 어떻게 넘길 것인가??
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
                             mrecyclerView.setAdapter(mAdapter);
 
                         } catch (JSONException e) {
