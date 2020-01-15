@@ -1,10 +1,25 @@
 package com.example.newsapp;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NewsActivity extends AppCompatActivity {
 
@@ -12,6 +27,7 @@ public class NewsActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private String[] mDataset = {"1","2"};
+    RequestQueue queue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +43,60 @@ public class NewsActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        // specify an adapter (see also next example)
-        mAdapter = new MyAdapter(mDataset);
-        recyclerView.setAdapter(mAdapter);
+        // Instantiate the RequestQueue.
+        queue = Volley.newRequestQueue(this);
+        // 1. 화면이 로딩 -> 뉴스정보를 받아온다.
+        // 2. 정보 -> 어댑터로 넘겨준다.
+        // 3. 어댑터 -> 세팅
 
-
+        getNews();
     }
+
+    public void getNews() {
+        String url ="https://newsapi.org/v2/top-headlines?country=kr&apiKey=be97132709164d4d9b0a6d8fd9ddb2c3";
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("news",response);
+
+                        // response -> NewsData Class 분류
+                        List<NewsData> news = new ArrayList<>();
+
+                        try {
+                            JSONObject jsonObj = new JSONObject(response);
+                            JSONArray arrayArticles = jsonObj.getJSONArray("articles");
+
+                            for(int i=0;i<arrayArticles.length();i++) {
+                                JSONObject obj = arrayArticles.getJSONObject(i);
+                                Log.d("news",obj.toString());
+                                NewsData newsData = new NewsData();
+                                newsData.setTitle(obj.getString("title"));
+                                newsData.setUrlToImage(obj.getString("urlToImage"));
+                                newsData.setContent(obj.getString("content"));
+
+                                news.add(newsData);
+                            }
+
+                            // specify an adapter (see also next example)
+                            mAdapter = new MyAdapter(news);
+                            recyclerView.setAdapter(mAdapter);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
 }
